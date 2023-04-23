@@ -1,11 +1,13 @@
-import 'dart:ffi';
-
-import 'package:flutter/material.dart';
-
+import 'dart:collection';
 class Coffee {
-  final String name;
-  final double price;
-  final String imagePath;
+  String name;
+  double price;
+  String imagePath;
+  int quantity;
 
-  Coffee({required this.name, required this.price, required this.imagePath});
+  Coffee(
+      {required this.name,
+      required this.price,
+      required this.imagePath,
+      required this.quantity});
 }

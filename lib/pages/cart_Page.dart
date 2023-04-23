@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../components/list_tiles.dart';
@@ -25,6 +26,7 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Consumer<CoffeeShop>(
       builder: (context, value, child) => SafeArea(
+        bottom: false,
         child: Padding(
           padding: const EdgeInsets.all(25),
           child: Column(
@@ -44,18 +46,19 @@ class _CartPageState extends State<CartPage> {
                       return CoffeeTile(
                         coffee: eachCoffee,
                         actionIcon: const Icon(Icons.delete),
+                        isCartPage: true,
                         onPressed: () {
                           removeFromCart(eachCoffee);
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              // TODO: Add spinning circle for better ui
                               Future.delayed(
-                                const Duration(seconds: 1),
+                                const Duration(milliseconds: 1500),
                                 () => Navigator.of(context).pop(true),
                               );
-                              return const AlertDialog(
-                                content: Text("Hello World"),
+                              return LoadingAnimationWidget.inkDrop(
+                                color: Colors.white,
+                                size: 50,
                               );
                             },
                           );
@@ -67,14 +70,19 @@ class _CartPageState extends State<CartPage> {
                 const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: Text("Total: \$${value.totalCost()}"),
+                  child:
+                      Text("Total: \$${value.totalCost().toStringAsFixed(2)}"),
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () {
-                    // controller.makePayment();
-                    controller.makePayment(
-                        amount: value.totalCost(), currency: "USD");
+                  onTap: () async {
+                    await controller.makePayment(value.totalCost(), 'GBP');
+                    await controller.displayPaymentSheet();
+                    value.emptyUserCart();
+                    // TODO:
+                    // New payment confirmation page
+                    // Add separate page for coffee quantity and sizes
+                    // Redirect the useer back to shop page
                   },
                   child: Container(
                     padding: const EdgeInsets.all(25),

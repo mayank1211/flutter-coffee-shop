@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -7,95 +8,102 @@ import 'package:flutter/material.dart';
 class PaymentController extends GetxController {
   Map<String, dynamic>? paymentIntentData;
 
+  payFee() {
+    try {
+      //if you want to upload data to any database do it here
+    } catch (e) {
+      // exception while uploading data
+    }
+  }
+
   Future<void> makePayment(
-      {required String amount, required String currency}) async {
+      double amount, String currency) async {
+    // Provider.of<CoffeeShop>(null, listen: false).emptyUserCart();
     try {
       const billingDetails = BillingDetails(
-        email: 'email@stripe.com',
-        phone: '+48888000888',
+        email: 'mayank.patel1211.mp@gmail.com',
+        phone: '+447123456789',
         address: Address(
-          city: 'Houston',
-          country: 'US',
-          line1: '1459  Circle Drive',
-          line2: '',
-          state: 'Texas',
-          postalCode: '77063',
+          city: 'London',
+          country: 'GB',
+          line1: '114 Leeds Road',
+          line2: 'Leeds',
+          state: 'West Yorkshire',
+          postalCode: 'LS1 7NG',
         ),
-      ); // mocked data for tests
+      );
+
       paymentIntentData = await createPaymentIntent(amount, currency);
-      if (paymentIntentData != null) {
-        await Stripe.instance.initPaymentSheet(
-          paymentSheetParameters: SetupPaymentSheetParameters(
-            // applePay: const PaymentSheetApplePay(
-            //   merchantCountryCode: 'US',
-            // ),
-            googlePay: const PaymentSheetGooglePay(
-              merchantCountryCode: 'US',
-              testEnv: true,
-            ),
-            appearance: const PaymentSheetAppearance(
-              // colors: PaymentSheetAppearanceColors(
-              //   background: Colors.lightBlue,
-              //   primary: Colors.blue,
-              //   componentBorder: Colors.red,
-              // ),
-              shapes: PaymentSheetShape(
-                //borderWidth: 4.0,
-                shadow: PaymentSheetShadowParams(color: Colors.red),
-              ),
-              primaryButton: PaymentSheetPrimaryButtonAppearance(
-                shapes: PaymentSheetPrimaryButtonShape(blurRadius: 0),
-                colors: PaymentSheetPrimaryButtonTheme(
-                  light: PaymentSheetPrimaryButtonThemeColors(
-                    background: Color.fromARGB(255, 231, 235, 30),
-                    text: Color.fromARGB(255, 235, 92, 30),
-                    border: Color.fromARGB(255, 235, 92, 30),
+      await Stripe.instance
+          .initPaymentSheet(
+            paymentSheetParameters: SetupPaymentSheetParameters(
+              allowsDelayedPaymentMethods: true,
+              appearance: const PaymentSheetAppearance(
+                shapes: PaymentSheetShape(
+                  shadow: PaymentSheetShadowParams(color: Colors.red),
+                ),
+                primaryButton: PaymentSheetPrimaryButtonAppearance(
+                  shapes: PaymentSheetPrimaryButtonShape(blurRadius: 0),
+                  colors: PaymentSheetPrimaryButtonTheme(
+                    light: PaymentSheetPrimaryButtonThemeColors(
+                      background: Color.fromARGB(255, 231, 235, 30),
+                      text: Color.fromARGB(255, 235, 92, 30),
+                      border: Color.fromARGB(255, 235, 92, 30),
+                    ),
                   ),
                 ),
               ),
+              billingDetails: billingDetails,
+              style: ThemeMode.dark,
+              // customFlow: true,
+              merchantDisplayName: 'Mayank',
+              // customerId: paymentIntentData!['customer'],
+              paymentIntentClientSecret: paymentIntentData!['client_secret'],
+              // customerEphemeralKeySecret: paymentIntentData!['ephemeralKey'],
             ),
-            billingDetails: billingDetails,
-            style: ThemeMode.dark,
-            customFlow: true,
-            merchantDisplayName: 'Prospects',
-            customerId: paymentIntentData!['customer'],
-            paymentIntentClientSecret: paymentIntentData!['client_secret'],
-            customerEphemeralKeySecret: paymentIntentData!['ephemeralKey'],
-          ),
-        );
-        displayPaymentSheet();
+          )
+          .then((value) {});
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
       }
-    } catch (e, s) {
-      print(paymentIntentData);
     }
   }
 
   displayPaymentSheet() async {
     try {
-      // TODO: Fix the payment notification ui
-      await Stripe.instance.presentPaymentSheet();
-      Get.snackbar('Payment', 'Payment Successful',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2));
-    } on Exception catch (e) {
-      if (e is StripeException) {
-        print("Error from Stripe: ${e.error.localizedMessage}");
-      } else {
-        print("Unforeseen error: ${e}");
+      await Stripe.instance.presentPaymentSheet().then((newValue) {
+        // payFee();
+        paymentIntentData = null;
+      }).onError((error, stackTrace) {
+        if (kDebugMode) {
+          print(error);
+        }
+      });
+    } on StripeException catch (e) {
+      Get.snackbar(
+        'Payment',
+        'Payment Error',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+      if (kDebugMode) {
+        print(e);
       }
     } catch (e) {
-      print("exception:$e");
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
-  //  Future<Map<String, dynamic>>
-  createPaymentIntent(String amount, String currency) async {
+  createPaymentIntent(double amount, String currency) async {
     try {
       Map<String, dynamic> body = {
-        'amount': calculateAmount(amount),
+        'amount': (amount * 100).toStringAsFixed(0),
         'currency': currency,
         'payment_method_types[]': 'card'
       };
@@ -104,17 +112,14 @@ class PaymentController extends GetxController {
           body: body,
           headers: {
             'Authorization':
-                'Bearer sk_test_51KtCCyCmrbEExMw5uumd5XcmQYhZk4ox8vjvAOUeW9OMBNX9CtfHk8IqIaFGpbIewxhrVZrqPFSyeJLeTpsKiSfC00cyWHFp8n', //your secret key here
+                'Bearer sk_test_51KtCCyCmrbEExMw5uumd5XcmQYhZk4ox8vjvAOUeW9OMBNX9CtfHk8IqIaFGpbIewxhrVZrqPFSyeJLeTpsKiSfC00cyWHFp8n',
             'Content-Type': 'application/x-www-form-urlencoded'
           });
       return jsonDecode(response.body);
     } catch (err) {
-      print('err charging user: ${err.toString()}');
+      if (kDebugMode) {
+        print(err);
+      }
     }
-  }
-
-  calculateAmount(String amount) {
-    final a = (int.parse(amount)) * 100;
-    return a.toString();
   }
 }

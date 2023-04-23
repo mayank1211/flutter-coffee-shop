@@ -28,10 +28,10 @@ Open Andriod Simulator:
 emulator -avd name-of-your-emulator
 ```
 
-Open IOS Simulator:
+Open IOS Simulator - (Only works with Macbook):
 
 ```
-emulator -avd name-of-your-emulator
+open -a simulator
 ```
 
 **Step 4:**

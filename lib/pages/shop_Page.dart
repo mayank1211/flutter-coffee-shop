@@ -1,5 +1,6 @@
 import 'package:coffe_shop/models/coffee_shop.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../components/list_tiles.dart';
@@ -38,19 +39,20 @@ class _ShopPageState extends State<ShopPage> {
                     Coffee eachCoffee = value.coffeeShop[index];
                     return CoffeeTile(
                       coffee: eachCoffee,
-                      actionIcon: Icon(Icons.add),
+                      actionIcon: const Icon(Icons.add),
+                      isCartPage: false,
                       onPressed: () {
                         addToCart(eachCoffee);
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            // TODO: Add spinning circle for better ui
                             Future.delayed(
-                              const Duration(seconds: 1),
+                              const Duration(milliseconds: 1500),
                               () => Navigator.of(context).pop(true),
                             );
-                            return const AlertDialog(
-                              content: Text("Hello World"),
+                            return LoadingAnimationWidget.inkDrop(
+                              color: Colors.white,
+                              size: 50,
                             );
                           },
                         );

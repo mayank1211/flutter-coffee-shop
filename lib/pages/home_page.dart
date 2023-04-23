@@ -1,4 +1,4 @@
-import 'package:coffe_shop/constants/Colors.dart';
+import 'package:coffe_shop/constants/app_theme.dart';
 import 'package:coffe_shop/pages/Cart_Page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final _pages = [ShopPage(), CartPage()];
+  final _pages = [const ShopPage(), const CartPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +36,12 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(
               height: 150,
-              margin: EdgeInsets.all(70),
+              margin: const EdgeInsets.all(70),
               child: Image.asset('assets/images/iced-tea.png'),
             ),
-            ListTile(leading: Icon(Icons.exit_to_app), title: Text('Logout')),
-            ListTile(leading: Icon(Icons.exit_to_app), title: Text('Logout')),
-            Align(
+            const ListTile(leading: Icon(Icons.exit_to_app), title: Text('Logout')),
+            const ListTile(leading: Icon(Icons.exit_to_app), title: Text('Logout')),
+            const Align(
               alignment: Alignment.bottomCenter,
               child: ListTile(
                   leading: Icon(Icons.exit_to_app), title: Text('Logout')),
