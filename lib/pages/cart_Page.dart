@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../components/list_tiles.dart';
-import '../components/stripe_payment.dart';
-import '../models/coffee.dart';
-import '../models/coffee_shop.dart';
+import 'package:coffe_shop/components/list_tiles.dart';
+import 'package:coffe_shop/controller/stripe_payment.dart';
+import 'package:coffe_shop/models/coffee.dart';
+import 'package:coffe_shop/models/coffee_shop.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -32,9 +33,12 @@ class _CartPageState extends State<CartPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Cart",
-                style: TextStyle(fontSize: 20),
+                style: GoogleFonts.montserrat(
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 25),
               if (value.userCart.isNotEmpty) ...[
@@ -53,12 +57,12 @@ class _CartPageState extends State<CartPage> {
                             context: context,
                             builder: (BuildContext context) {
                               Future.delayed(
-                                const Duration(milliseconds: 1500),
+                                const Duration(milliseconds: 1400),
                                 () => Navigator.of(context).pop(true),
                               );
                               return LoadingAnimationWidget.inkDrop(
                                 color: Colors.white,
-                                size: 50,
+                                size: MediaQuery.of(context).size.width * 0.25,
                               );
                             },
                           );
@@ -70,10 +74,13 @@ class _CartPageState extends State<CartPage> {
                 const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child:
-                      Text("Total: \$${value.totalCost().toStringAsFixed(2)}"),
+                  child: Text(
+                    "Total: \$${value.totalCost().toStringAsFixed(2)}",
+                    style: GoogleFonts.montserrat(
+                        fontSize: MediaQuery.of(context).size.width * 0.05, fontWeight: FontWeight.w500),
+                  ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
                 GestureDetector(
                   onTap: () async {
                     await controller.makePayment(value.totalCost(), 'GBP');
@@ -91,11 +98,14 @@ class _CartPageState extends State<CartPage> {
                       color: Colors.brown,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         "Pay Now",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w700),
+                        style: GoogleFonts.montserrat(
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -103,6 +113,7 @@ class _CartPageState extends State<CartPage> {
               ] else ...[
                 const Align(
                   alignment: Alignment.center,
+                  // Assign dynamic fontSize
                   child: Text(
                     "Your cart it empty!",
                     style: TextStyle(fontSize: 15),

@@ -30,8 +30,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        foregroundColor: Colors.black,
       ),
       drawer: Drawer(
+        shadowColor: Colors.black,
         child: Column(
           children: [
             Container(
@@ -39,8 +41,10 @@ class _HomePageState extends State<HomePage> {
               margin: const EdgeInsets.all(70),
               child: Image.asset('assets/images/iced-tea.png'),
             ),
-            const ListTile(leading: Icon(Icons.exit_to_app), title: Text('Logout')),
-            const ListTile(leading: Icon(Icons.exit_to_app), title: Text('Logout')),
+            const ListTile(
+                leading: Icon(Icons.exit_to_app), title: Text('Logout')),
+            const ListTile(
+                leading: Icon(Icons.exit_to_app), title: Text('Logout')),
             const Align(
               alignment: Alignment.bottomCenter,
               child: ListTile(

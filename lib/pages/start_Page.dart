@@ -1,7 +1,7 @@
 import 'package:coffe_shop/constants/app_theme.dart';
-import 'package:coffe_shop/pages/cart_Page.dart';
 import 'package:coffe_shop/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -27,12 +27,24 @@ class _StartPageState extends State<StartPage> {
             ),
           ),
           const SizedBox(height: 10),
-          const Text("Brew Day"),
+          Text(
+            "Brew Day",
+            style: GoogleFonts.montserrat(
+              fontSize: MediaQuery.of(context).size.width * 0.06,
+              fontWeight: FontWeight.w500
+            ),
+          ),
           const SizedBox(height: 10),
-          const Text("How do you like your coffee?"),
+          Text(
+            "How do you like your coffee?",
+            style: GoogleFonts.montserrat(
+              fontSize: MediaQuery.of(context).size.width * 0.045,
+              fontWeight: FontWeight.w400
+            ),
+          ),
           GestureDetector(
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const HomePage())),
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const HomePage())),
             child: Container(
               padding: const EdgeInsets.all(25),
               margin: const EdgeInsets.all(25),
@@ -41,10 +53,14 @@ class _StartPageState extends State<StartPage> {
                 color: Colors.brown,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   "Enter Shop",
-                  style: TextStyle(color: Colors.white),
+                  style: GoogleFonts.montserrat(
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white
+                  ),
                 ),
               ),
             ),

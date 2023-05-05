@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'coffee.dart';
+import 'package:coffe_shop/models/coffee.dart';
 
 class CoffeeShop extends ChangeNotifier {
   // List of coffee sale
@@ -43,34 +41,35 @@ class CoffeeShop extends ChangeNotifier {
 
   // remove from user cart
   void addItemToCart(Coffee coffee) {
-
     if (_userCart.contains(coffee)) {
-            
       int coffeeIndex =
           _userCart.indexWhere((element) => element.name == coffee.name);
 
       int quantities = _userCart[coffeeIndex].quantity;
 
-      _userCart[coffeeIndex].quantity = (quantities+1);
-      
+      _userCart[coffeeIndex].quantity = (quantities + 1);
     } else {
       _userCart.add(coffee);
-    }    notifyListeners();
+    }
+    notifyListeners();
   }
 
   // remove from user cart
-  void removeItemFromCart(Coffee coffee) {
+  void removeItemQuantityFromCart(Coffee coffee) {
     if (_userCart.contains(coffee)) {
       int coffeeIndex =
           _userCart.indexWhere((element) => element.name == coffee.name);
       int quantities = _userCart[coffeeIndex].quantity;
 
-      if (userCart[coffeeIndex].quantity <= 1) {
-        _userCart.remove(coffee);
-      } else {
-        _userCart[coffeeIndex].quantity = (quantities-1);
+      if (userCart[coffeeIndex].quantity > 1) {
+        _userCart[coffeeIndex].quantity = (quantities - 1);
       }
     }
+    notifyListeners();
+  }
+
+  void removeItemFromCart(Coffee coffee) {
+    _userCart.remove(coffee);
     notifyListeners();
   }
 
@@ -79,7 +78,7 @@ class CoffeeShop extends ChangeNotifier {
     _userCart = [];
     notifyListeners();
   }
-  
+
   // add total price in cart
   double totalCost() {
     double totalCost = 0.0;

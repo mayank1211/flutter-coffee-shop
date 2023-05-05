@@ -2,9 +2,9 @@ import 'package:coffe_shop/models/coffee_shop.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../components/list_tiles.dart';
-import '../models/coffee.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:coffe_shop/components/list_tiles.dart';
+import 'package:coffe_shop/models/coffee.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -27,9 +27,12 @@ class _ShopPageState extends State<ShopPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "How do you like your coffee?",
-                style: TextStyle(fontSize: 20),
+                style: GoogleFonts.montserrat(
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 25),
               Expanded(
